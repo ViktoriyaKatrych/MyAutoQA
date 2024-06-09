@@ -1,6 +1,7 @@
 This repozitory was created during studying on Tester QA Auto Course on the Prometheus platform 
 https://prometheus.org.ua/prometheus-plus/automatic-software-testing/
 
+There are API test, UI test, HTTP test and Database test exercises.
 
 This code was developed by Viktoriya Katrych base on course materials.
 You can use this code, it's free :)))
