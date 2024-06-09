@@ -22,7 +22,7 @@ def test_repo_can_be_found(github_api):
     print(f'Total Count:{k}')
     print({repos['items'] [0] ['name']})
 
-    assert repos['total_count'] == 57
+    assert repos['total_count'] == 58
     assert 'become-qa-auto' in repos['items'] [0] ['name']
 
 
