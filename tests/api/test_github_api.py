@@ -1,7 +1,7 @@
 import pytest
 from modules.api.clients.github import GitHub
 
-#test users
+#===== General tests. Test users ===========
 @pytest.mark.api
 def test_user_exists(github_api):
     user = github_api.get_user('defunkt')
@@ -47,7 +47,7 @@ def test_repo_with_single_char_be_found(github_api):
     assert repos['total_count'] !=0  
 
 
-#Test Emojis. Individual task.
+#======= My Test Emojis. Individual task. ============
 
 @pytest.mark.apiemo
 def test_emo_exist(github_api):
@@ -67,14 +67,13 @@ def test_emo_no_exist(github_api):
     print('No icon "white_circlehhh"')    
     
 
-
-# Test commit. Individual task.
+#======= My Test commit. Individual task.============
 
 @pytest.mark.apicommit
 def test_commit_realdata(github_api):
     comm = github_api.get_commit('ViktoriyaKatrych', 'NewAutoQA', 'main')
-  
-    d =comm['commit']['author']
+    
+    d = comm['commit']['author']
     print(d)
     assert d['name'] == 'Viktoriya Katrych'
     assert d['email'] == 'vkatrych@gmail.com'
@@ -87,10 +86,10 @@ def test_commit_realdata(github_api):
 @pytest.mark.apicommit
 def test_commit_otherREPO(github_api):
     comm = github_api.get_commit('ViktoriyaKatrych', 'WorkAutoQA', 'main')
-  
-    d =comm['commit']['author']
+    
+    d = comm['commit']['author']
     print(d)
-    assert d['name'] == 'Viktoriya Katrych'
+    assert d['name'] == 'ViktoriyaKatrych'
     assert d['email'] == 'vkatrych@gmail.com'
     
     f = comm['commit']['message']
@@ -105,6 +104,7 @@ def test_commit_noexists_owner(github_api):
    
     assert comm['message'] == 'Not Found'
     print('No Owner') 
+
 
 @pytest.mark.apicommit
 def test_commit_noexists_REPO(github_api):

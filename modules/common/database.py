@@ -11,7 +11,8 @@ class Database():
         sqlite_select_Query = "SELECT sqlite_version();"
         self.cursor.execute(sqlite_select_Query)
         record = self.cursor.fetchall()
-        print(f"Connected successfully. SQLite Database Version is: {record}")    
+        print(f"Connected successfully. SQLite Database Version is: {record}")
+        return record != None    
 
     def get_all_users(self):
         query = "SELECT name, address, city FROM customers"
@@ -59,15 +60,17 @@ class Database():
         record = self.cursor.fetchall()
         return record
 
- #Individual
-    def get_all(self):
+#========= My Query ===============
+    
+    def get_all_orders(self):
         query = "SELECT * FROM orders"
         
         self.cursor.execute(query)
         record = self.cursor.fetchall()
         return record    
     
-    def get_all_users(self):
+
+    def get_all_customers(self):
         query = "SELECT * FROM customers"
         
         self.cursor.execute(query)
@@ -75,21 +78,21 @@ class Database():
         return record    
     
     
-    def insert_new_user(self, user_id, username, address, city, postCode, country):
+    def insert_new_customer(self, user_id, username, address, city, postCode, country):
         query = f"INSERT INTO customers(id, name, address, city, postalCode, country) \
             VALUES ({user_id}, '{username}', '{address}', '{city}', '{postCode}', '{country}')"
         self.cursor.execute(query)
         self.connection.commit()  
 
 
-    def select_users_by_city(self, city, address):
-        query = f"SELECT id, name FROM customers WHERE city = '{city}' OR address = '{address}'" 
+    def select_customer_by_city_or_address(self, city, address):
+        query = f"SELECT id, name, address, city FROM customers WHERE city = '{city}' OR address = '{address}'" 
         self.cursor.execute(query)
         record = self.cursor.fetchall()
         return record 
 
 
-    def delete_users_by_city(self, city, address):
+    def delete_customer_by_city_or_address(self, city, address):
         query = f"DELETE FROM customers WHERE city = '{city}'  OR address = '{address}'"
         self.cursor.execute(query)
         self.connection.commit()
@@ -101,16 +104,16 @@ class Database():
         record = self.cursor.fetchall()
         return record    
     
-
-    
+ 
     def insert_order(self, order_id, customer_id, product_id, order_date):
         query =f'INSERT OR REPLACE INTO orders(id, customer_id, product_id, order_date) \
                 VALUES ({order_id}, {customer_id}, {product_id}, {order_date})'
         self.cursor.execute(query)
         self.connection.commit()  
 
+
     def delete_order_by_id(self, order_id):
-        query = f'DELETE FROM orders WHERE id = {order_id}'
+        query = f'DELETE FROM orders WHERE id > {order_id}'
         self.cursor.execute(query)
         self.connection.commit()    
 
