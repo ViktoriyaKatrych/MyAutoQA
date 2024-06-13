@@ -9,19 +9,18 @@ from datetime import time
 sys.stdout.reconfigure(encoding='utf-8')
 
 #+++++ General tests =============
+
 @pytest.mark.database
-def test_database_connection():
-    db = Database()
-    rr = db.test_connection()
+def test_database_connection(connectdb):
+    rr = connectdb.test_connection()
     print(rr)
    
     assert rr == True
 
 
 @pytest.mark.database
-def test_check_all_users():
-    db = Database()
-    users = db.get_all_users()
+def test_check_all_users(connectdb):
+    users = connectdb.get_all_users()
     count = len(users)
     print(count)
 
@@ -29,9 +28,8 @@ def test_check_all_users():
 
    
 @pytest.mark.database
-def test_check_user_sergiy():
-    db = Database()
-    user = db.get_user_adress_by_name('Sergii')
+def test_check_user_sergiy(connectdb):
+    user = connectdb.get_user_adress_by_name('Sergii')
 
     print(user)
 
@@ -42,10 +40,9 @@ def test_check_user_sergiy():
 
 
 @pytest.mark.database
-def test_product_qnt_update():
-    db = Database()
-    db.update_product_qnt_by_id(1, 25)
-    water_qnt = db.select_product_qnt_by_id(1)
+def test_product_qnt_update(connectdb):
+    connectdb.update_product_qnt_by_id(1, 25)
+    water_qnt = connectdb.select_product_qnt_by_id(1)
     
     print(water_qnt)
     
@@ -53,10 +50,9 @@ def test_product_qnt_update():
 
 
 @pytest.mark.database
-def test_product_insert():
-    db = Database()
-    db.insert_product(4, 'печиво', 'солодке', 30)
-    water_qnt = db.select_product_qnt_by_id(4)
+def test_product_insert(connectdb):
+    connectdb.insert_product(4, 'печиво', 'солодке', 30)
+    water_qnt = connectdb.select_product_qnt_by_id(4)
 
     print(water_qnt)
     
@@ -64,15 +60,14 @@ def test_product_insert():
 
 
 @pytest.mark.database
-def test_product_delete():
-    db = Database()
-    db.insert_product(99, 'тестові', 'дані', 999)
-    qnt = db.select_product_qnt_by_id(99)
+def test_product_delete(connectdb):
+    connectdb.insert_product(99, 'тестові', 'дані', 999)
+    qnt = connectdb.select_product_qnt_by_id(99)
 
     print(qnt)
 
-    db.delete_product_by_id(99)
-    qnt = db.select_product_qnt_by_id(99)
+    connectdb.delete_product_by_id(99)
+    qnt = connectdb.select_product_qnt_by_id(99)
 
     print(qnt)
 
@@ -80,9 +75,8 @@ def test_product_delete():
 
 
 @pytest.mark.database
-def test_detailed_orders():
-    db = Database()
-    orders = db.get_detailed_orders()
+def test_detailed_orders(connectdb):
+    orders = connectdb.get_detailed_orders()
     print('Замовлення', orders)
 
     assert len(orders) == 1
@@ -97,9 +91,8 @@ def test_detailed_orders():
 
 #  Get  all customers.
 @pytest.mark.dbcust
-def test_check_all_customers():
-    db = Database()
-    users = db.get_all_customers()
+def test_check_all_customers(connectdb):
+    users = connectdb.get_all_customers()
 
     l = len(users)
     print("All records are: ", l)
@@ -113,14 +106,13 @@ def test_check_all_customers():
 # Check how inputed data writted to DB.
 
 @pytest.mark.dbcust
-def test_customer_insert():
-    db = Database()
-    users = db.get_all_customers()
+def test_customer_insert(connectdb):
+    users = connectdb.get_all_customers()
     count_user = len(users)
     end_user = count_user+500
-    db.insert_new_customer(end_user, 'Vasyl', 'S. Bandery, 22', 'Lviv', '2555kk', 'Ukraine')
+    connectdb.insert_new_customer(end_user, 'Vasyl', 'S. Bandery, 22', 'Lviv', '2555kk', 'Ukraine')
      
-    users = db.get_all_customers()
+    users = connectdb.get_all_customers()
     print(users)
 
     newcount_user = len(users)
@@ -144,15 +136,14 @@ def test_customer_insert():
 #         No control inputted data in DB.
 
 @pytest.mark.dbcusterr
-def test_customer_insert_no_rigth_data():
-    db = Database()
-    users = db.get_all_customers()
+def test_customer_insert_no_rigth_data(connectdb):
+    users = connectdb.get_all_customers()
     count_user = len(users)
     end_user = count_user+500
     
-    db.insert_new_customer(end_user, 8888888, 'S. Bandery, 22', True, 2345, datetime.strptime('2024-5-23','%Y-%m-%d'))
+    connectdb.insert_new_customer(end_user, 8888888, 'S. Bandery, 22', True, 2345, datetime.strptime('2024-5-23','%Y-%m-%d'))
 
-    users = db.get_all_customers()
+    users = connectdb.get_all_customers()
     count_users = len(users)
     print("All records are: ", count_users)
     print(users)      
@@ -174,9 +165,8 @@ def test_customer_insert_no_rigth_data():
 
 # Select all customers by filter City or Address
 @pytest.mark.dbcust
-def test_customers_select_by_city_or_street():
-    db = Database()
-    users = db.select_customer_by_city_or_address('Lviv', 'S. Bandery, 22')
+def test_customers_select_by_city_or_street(connectdb):
+    users = connectdb.select_customer_by_city_or_address('Lviv', 'S. Bandery, 22')
     print(users)
     count = len(users)
     for i in range (count-1):
@@ -185,13 +175,12 @@ def test_customers_select_by_city_or_street():
    
 # Select and Delete all users by filter City or Address
 @pytest.mark.dbcust
-def test_customer_delete():
-    db = Database()
-    users = db.select_customer_by_city_or_address('Lviv', 'S. Bandery, 22')
+def test_customer_delete(connectdb):
+    users = connectdb.select_customer_by_city_or_address('Lviv', 'S. Bandery, 22')
     print(users)
 
-    db.delete_customer_by_city_or_address('Lviv', 'S. Bandery, 22')
-    users = db.get_all_customers()
+    connectdb.delete_customer_by_city_or_address('Lviv', 'S. Bandery, 22')
+    users = connectdb.get_all_customers()
     print(users)
     count = len(users)
     for i in range (count-1):
@@ -202,10 +191,9 @@ def test_customer_delete():
 # System must display exeption
 # Errtest  
 @pytest.mark.dbproduct
-def test_product_insert_not_rigth():
+def test_product_insert_not_rigth(connectdb):
     with pytest.raises(OperationalError) as excinfo:
-        db = Database()
-        db.insert_product(6, 'Water', 'PepsiCola', '70 od')
+        connectdb.insert_product(6, 'Water', 'PepsiCola', '70 od')
  
     assert "syntax error" in str(excinfo.value)   
    
@@ -216,17 +204,16 @@ def test_product_insert_not_rigth():
 # Rezult this test must be failed.
 # Errtest
 @pytest.mark.dbproduct
-def test_product_delete_by_pkey():
-    db = Database()
-    db.insert_product(5, 'Water', 'CocaCola', 60)
-    products = db.get_all_products()
+def test_product_delete_by_pkey(connectdb):
+    connectdb.insert_product(5, 'Water', 'CocaCola', 60)
+    products = connectdb.get_all_products()
     print(products)
     id=1
     product_name_id = products[0][2]
     with pytest.raises(DatabaseError) as excinfo:
-        db.delete_product_by_id(id)
+        connectdb.delete_product_by_id(id)
 
-    products = db.get_all_products()
+    products = connectdb.get_all_products()
     print(products)
     
     assert product_name_id != products[0][2]
@@ -234,16 +221,15 @@ def test_product_delete_by_pkey():
 
 #Get all Products
 @pytest.mark.dbproduct
-def test_check_all_products():
-    db = Database()
-    products = db.get_all_products()
+def test_check_all_products(connectdb):
+    products = connectdb.get_all_products()
     count = len(products)
     print(count)
     print(products)
-    db.insert_product(1, 'солодка вода', 'з цукром', 10)
-    water_qnt = db.select_product_qnt_by_id(1)
+    connectdb.insert_product(1, 'солодка вода', 'з цукром', 10)
+    water_qnt = connectdb.select_product_qnt_by_id(1)
     print(water_qnt)
-    products = db.get_all_products()
+    products = connectdb.get_all_products()
     new_count = len(products)
     
     assert water_qnt[0][0] == 10
@@ -252,12 +238,11 @@ def test_check_all_products():
    
 # Adding new Orders to table Orders.
 @pytest.mark.dborder
-def test_insert_new_order():
-    db = Database()
-    order = db.get_all_orders()
+def test_insert_new_order(connectdb):
+    order = connectdb.get_all_orders()
     count = len(order)
-    db.insert_order(2, 504, 2, 5556)
-    order = db.get_all_orders()
+    connectdb.insert_order(2, 504, 2, 5556)
+    order = connectdb.get_all_orders()
     newcount = len(order)
     print(order) 
     
@@ -266,11 +251,10 @@ def test_insert_new_order():
 
 # Test to Delete order from table Orders, where id_orders > 1.
 @pytest.mark.dborder
-def test_delete_order():
-    db = Database()
+def test_delete_order(connectdb):
     id = 1
-    db.delete_order_by_id(id)
-    order = db.get_all_orders()
+    connectdb.delete_order_by_id(id)
+    order = connectdb.get_all_orders()
     print(order)
     new_id = order[0][0]
 

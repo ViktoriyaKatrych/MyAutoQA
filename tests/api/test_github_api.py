@@ -89,7 +89,7 @@ def test_commit_otherREPO(github_api):
     
     d = comm['commit']['author']
     print(d)
-    assert d['name'] == 'ViktoriyaKatrych'
+    assert d['name'] == 'Viktoriya Katrych'
     assert d['email'] == 'vkatrych@gmail.com'
     
     f = comm['commit']['message']
